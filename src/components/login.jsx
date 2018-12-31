@@ -13,6 +13,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import TextField from '@material-ui/core/TextField';
 import classNames from 'classnames';
+import PopupMessages from './popupMessages'
 
 const styles = theme => ({
     main: {
@@ -62,8 +63,25 @@ class Login extends React.Component {
         this.setState(state => ({showPassword: !state.showPassword}));
     };
 
+    getMessage() {
+        if (this.props.loginStatus === 'success') {
+            return 'Login Successful!';
+        } else {
+            return 'Username or Password invalid!';
+        }
+    }
+
+    getVariant() {
+        if (this.props.loginStatus === 'success') {
+            return "success";
+        } else {
+            return 'error';
+        }
+    }
+
     render() {
         const {classes} = this.props;
+        console.log("props", this.props);
 
         return (
             <main className={classes.main}>
@@ -116,6 +134,11 @@ class Login extends React.Component {
                             onClick={() => this.props.onClickLogin(this.state.username, this.state.password)}
                         >
                             Login </Button>
+                        <PopupMessages variant={this.getVariant()}
+                                       message={this.getMessage()}
+                                       tries={this.props.tries}
+                        />
+
                     </form>
                 </Paper>
             </main>
@@ -125,7 +148,9 @@ class Login extends React.Component {
 
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
-    onClickLogin: PropTypes.func.isRequired
+    onClickLogin: PropTypes.func.isRequired,
+    loginStatus: PropTypes.string.isRequired,
+    tries: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(Login);

@@ -90,6 +90,21 @@ class LeftDrawer extends React.Component {
         open: false,
     };
 
+    static getListIcon(index) {
+        switch (index) {
+            case 'List':
+                return <ListIcon/>;
+            case 'Add':
+                return <AddBoxIcon/>;
+            case 'Edit':
+                return <EditIcon/>;
+            case 'Delete':
+                return <DeleteForeverIcon/>;
+            default:
+                return <AccessAlarmIcon/>;
+        }
+    }
+
     handleDrawerOpen = () => {
         this.setState({open: true});
     };
@@ -143,7 +158,7 @@ class LeftDrawer extends React.Component {
                     <List>
                         {['List', 'Add', 'Edit', 'Delete'].map((text, index) => (
                             <ListItem button key={text}>
-                                <ListItemIcon>{this.getListIcon(text)}</ListItemIcon>
+                                <ListItemIcon>{LeftDrawer.getListIcon(text)}</ListItemIcon>
                                 <ListItemText primary={text}/>
                             </ListItem>
                         ))}
@@ -166,32 +181,21 @@ class LeftDrawer extends React.Component {
                     <div className={classes.drawerHeader}/>
                     <Login
                         onClickLogin={this.props.checkLogin}
-                    ></Login>
+                        loginStatus={this.props.loginStatus}
+                        tries={this.props.tries}
+                    />
                 </main>
             </div>
         );
-    }
-
-    getListIcon(index) {
-        switch (index) {
-            case 'List':
-                return <ListIcon/>;
-            case 'Add':
-                return <AddBoxIcon/>;
-            case 'Edit':
-                return <EditIcon/>;
-            case 'Delete':
-                return <DeleteForeverIcon/>;
-            default:
-                return <AccessAlarmIcon/>;
-        }
     }
 }
 
 LeftDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    checkLogin: PropTypes.func.isRequired
+    checkLogin: PropTypes.func.isRequired,
+    loginStatus: PropTypes.string.isRequired,
+    tries: PropTypes.number.isRequired
 };
 
 export default withStyles(styles, {withTheme: true})(LeftDrawer);

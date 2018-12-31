@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './App.css';
-
 import LeftDrawer from "./components/leftDrawer";
 
 const domainName = "https://fandoco-vault.herokuapp.com";
@@ -8,7 +7,9 @@ const domainName = "https://fandoco-vault.herokuapp.com";
 class App extends Component {
 
     state = {
-        token: null
+        token: null,
+        loginStatus: '',
+        tries: 0
 
     };
 
@@ -21,7 +22,10 @@ class App extends Component {
         return (
             <div>
                 <LeftDrawer
-                    checkLogin={this.checkLogin}/>
+                    checkLogin={this.checkLogin}
+                    loginStatus={this.state.loginStatus}
+                    tries={this.state.tries}
+                />
             </div>
         );
     }
@@ -31,20 +35,21 @@ class App extends Component {
         let url = domainName + "/login";
         let body = "{\"userName\" : \"" + username + "\",\"password\" : \"" + password + "\"}";
 
-        let postreq = new XMLHttpRequest();
-        postreq.open('POST', url, true);
-        postreq.setRequestHeader('Content-type', 'application/json');
-        postreq.send(body);
+        let postReq = new XMLHttpRequest();
+        postReq.open('POST', url, true);
+        postReq.setRequestHeader('Content-type', 'application/json');
+        postReq.send(body);
         let token = false;
-        postreq.onreadystatechange = () => {//Call a function when the state changes.
-            if (postreq.readyState === 4 && postreq.status === 200) {
-                token = postreq.getResponseHeader("Authorization");
-                this.setState({token});
+        postReq.onreadystatechange = () => {//Call a function when the state changes.
+            if (postReq.readyState === 4 && postReq.status === 200) {
+                token = postReq.getResponseHeader("Authorization");
+
+                this.setState({token: token, loginStatus: 'success', tries: this.state.tries + 1});
                 console.log('Logged in', token);
             }
-            if (postreq.readyState === 4 && postreq.status !== 200) {
-                console.log('Wrong Password!');
-                // this.setState({token});
+            if (postReq.readyState === 4 && postReq.status !== 200) {
+
+                this.setState({token: null, loginStatus: 'failure', tries: this.state.tries + 1});
             }
         }
 
@@ -53,4 +58,3 @@ class App extends Component {
 }
 
 export default App;
-
