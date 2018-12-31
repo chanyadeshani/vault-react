@@ -164,7 +164,9 @@ class LeftDrawer extends React.Component {
                     })}
                 >
                     <div className={classes.drawerHeader}/>
-                    <Login></Login>
+                    <Login
+                        onClickLogin={this.props.checkLogin}
+                    ></Login>
                 </main>
             </div>
         );
@@ -189,6 +191,7 @@ class LeftDrawer extends React.Component {
 LeftDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
+    checkLogin: PropTypes.func.isRequired
 };
 
 export default withStyles(styles, {withTheme: true})(LeftDrawer);

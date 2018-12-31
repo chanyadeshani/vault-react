@@ -113,6 +113,7 @@ class Login extends React.Component {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
+                            onClick={() => this.props.onClickLogin(this.state.username, this.state.password)}
                         >
                             Login </Button>
                     </form>
@@ -124,6 +125,7 @@ class Login extends React.Component {
 
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
+    onClickLogin: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Login);
