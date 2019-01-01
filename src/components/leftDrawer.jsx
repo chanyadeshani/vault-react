@@ -115,7 +115,7 @@ class LeftDrawer extends React.Component {
 
     render() {
         const {classes, theme} = this.props;
-        const {open} = this.state;
+        const open = this.props.loginStatus === 'success';
 
         return (
             <div className={classes.root}>
@@ -179,11 +179,13 @@ class LeftDrawer extends React.Component {
                     })}
                 >
                     <div className={classes.drawerHeader}/>
-                    <Login
-                        onClickLogin={this.props.checkLogin}
-                        loginStatus={this.props.loginStatus}
-                        tries={this.props.tries}
+
+                    <FillBody onClickLogin={this.props.checkLogin}
+                              loginStatus={this.props.loginStatus}
+                              tries={this.props.tries}
+                              token={this.props.token}
                     />
+
                 </main>
             </div>
         );
@@ -195,7 +197,22 @@ LeftDrawer.propTypes = {
     theme: PropTypes.object.isRequired,
     checkLogin: PropTypes.func.isRequired,
     loginStatus: PropTypes.string.isRequired,
-    tries: PropTypes.number.isRequired
+    tries: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
 };
+
+
+function FillBody(props) {
+    if (props.token === null) {
+        return (<Login
+            onClickLogin={props.onClickLogin}
+            loginStatus={props.loginStatus}
+            tries={props.tries}
+        />);
+    } else {
+        return null;
+    }
+
+}
 
 export default withStyles(styles, {withTheme: true})(LeftDrawer);
