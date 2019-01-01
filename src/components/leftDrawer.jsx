@@ -88,6 +88,7 @@ const styles = theme => ({
 class LeftDrawer extends React.Component {
     state = {
         open: false,
+        firstTime: true
     };
 
     static getListIcon(index) {
@@ -106,16 +107,20 @@ class LeftDrawer extends React.Component {
     }
 
     handleDrawerOpen = () => {
-        this.setState({open: true});
+        let token = localStorage.getItem('token');
+        if (typeof (token) !== "undefined" && token !== null) {
+            this.setState({open: true, firstTime: false});
+
+        }
     };
 
     handleDrawerClose = () => {
-        this.setState({open: false});
+        this.setState({open: false, firstTime: false});
     };
 
     render() {
         const {classes, theme} = this.props;
-        const open = this.props.loginStatus === 'success';
+        const open = this.state.firstTime === true ? true : this.state.open;
 
         return (
             <div className={classes.root}>
@@ -183,9 +188,7 @@ class LeftDrawer extends React.Component {
                     <FillBody onClickLogin={this.props.checkLogin}
                               loginStatus={this.props.loginStatus}
                               tries={this.props.tries}
-                              token={this.props.token}
                     />
-
                 </main>
             </div>
         );
@@ -198,12 +201,13 @@ LeftDrawer.propTypes = {
     checkLogin: PropTypes.func.isRequired,
     loginStatus: PropTypes.string.isRequired,
     tries: PropTypes.number.isRequired,
-    token: PropTypes.string.isRequired
 };
 
 
 function FillBody(props) {
-    if (props.token === null) {
+    let token = localStorage.getItem('token');
+    console.log(localStorage.getItem('token'));
+    if (typeof (token) === "undefined" || token === null) {
         return (<Login
             onClickLogin={props.onClickLogin}
             loginStatus={props.loginStatus}
@@ -212,7 +216,6 @@ function FillBody(props) {
     } else {
         return null;
     }
-
 }
 
 export default withStyles(styles, {withTheme: true})(LeftDrawer);

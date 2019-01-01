@@ -25,7 +25,6 @@ class App extends Component {
                     checkLogin={this.checkLogin}
                     loginStatus={this.state.loginStatus}
                     tries={this.state.tries}
-                    token={this.state.token}
                 />
             </div>
         );
@@ -45,7 +44,7 @@ class App extends Component {
                 let token = postReq.getResponseHeader("Authorization");
 
                 this.setState({token: token, loginStatus: 'success', tries: this.state.tries + 1});
-                console.log('Logged in', token);
+                localStorage.setItem('token', token);
             }
             if (postReq.readyState === 4 && postReq.status !== 200) {
 
