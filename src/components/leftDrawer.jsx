@@ -125,9 +125,7 @@ class LeftDrawer extends React.Component {
                 console.log('Help out Clicked');
                 break;
             case 'Logout':
-                console.log('Logged out Clicked');
-                localStorage.removeItem('token');
-                this.setState({logout: true});
+                this.props.deleteToken();
                 break;
             default:
                 console.log('Switch default');
@@ -227,7 +225,8 @@ LeftDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
-    setToken: PropTypes.func.isRequired
+    setToken: PropTypes.func.isRequired,
+    deleteToken: PropTypes.func.isRequired
 };
 
 

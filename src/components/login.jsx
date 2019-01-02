@@ -62,7 +62,7 @@ class Login extends React.Component {
     constructor() {
         super();
         this.checkLogin = this.checkLogin.bind(this);
-        this.setOpen = this.setOpen.bind(this);
+        this.setShowPopupStatusToFalse = this.setShowPopupStatusToFalse.bind(this);
     }
 
     handleChange = prop => event => {

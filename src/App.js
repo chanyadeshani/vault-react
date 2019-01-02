@@ -6,12 +6,13 @@ import LeftDrawer from "./components/leftDrawer";
 class App extends Component {
 
     state = {
-        token: '',
+        token: localStorage.getItem("token")
     };
 
     constructor() {
         super();
         this.setToken = this.setToken.bind(this);
+        this.deleteToken = this.deleteToken.bind(this);
     }
 
     render() {
@@ -20,6 +21,7 @@ class App extends Component {
                 <LeftDrawer
                     token={this.state.token}
                     setToken={this.setToken}
+                    deleteToken={this.deleteToken}
                 />
             </div>
         );
@@ -28,6 +30,11 @@ class App extends Component {
     setToken(token) {
         this.setState({token});
         localStorage.setItem('token', token);
+    }
+
+    deleteToken() {
+        this.setState({token: ''});
+        localStorage.removeItem('token');
     }
 }
 
