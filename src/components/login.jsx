@@ -56,13 +56,13 @@ class Login extends React.Component {
         password: '',
         showPassword: false,
         loginStatus: '',
-        showPopup: false
+        showPopup: false,
+        tries: 0
     };
 
     constructor() {
         super();
         this.checkLogin = this.checkLogin.bind(this);
-        this.setShowPopupStatusToFalse = this.setShowPopupStatusToFalse.bind(this);
     }
 
     handleChange = prop => event => {
@@ -101,18 +101,23 @@ class Login extends React.Component {
             if (postReq.readyState === 4 && postReq.status === 200) {
                 let token = postReq.getResponseHeader("Authorization");
 
-                this.setState({loginStatus: 'success', showPopup: true});
+                this.setState((prevState) => ({loginStatus: 'success', showPopup: true, tries: prevState.tries + 1}));
                 this.props.setToken(token);
+                this.props.handleDrawerOpen();
             }
             if (postReq.readyState === 4 && postReq.status !== 200) {
-
-                this.setState({loginStatus: 'failure', showPopup: true});
+                this.setState((prevState) => ({loginStatus: 'failure', showPopup: true, tries: prevState.tries + 1}));
             }
-        }
+        };
     }
 
-    setShowPopupStatusToFalse() {
-        this.setState({showPopup: false});
+    showPopup() {
+        if (this.state.showPopup) {
+            return (<PopupMessages variant={this.getVariant()}
+                                   message={this.getMessage()}
+                                   key={this.state.tries}
+            />);
+        }
     }
 
     render() {
@@ -169,22 +174,19 @@ class Login extends React.Component {
                             onClick={() => this.checkLogin(this.state.username, this.state.password)}
                         >
                             Login </Button>
-                        <PopupMessages variant={this.getVariant()}
-                                       message={this.getMessage()}
-                                       open={this.state.showPopup}
-                                       setShowPopupStatusToFalse={this.setShowPopupStatusToFalse}
-                        />
-
+                        {this.showPopup()}
                     </form>
                 </Paper>
             </main>
         );
     }
+
 }
 
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
     setToken: PropTypes.func.isRequired,
+    handleDrawerOpen: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Login);

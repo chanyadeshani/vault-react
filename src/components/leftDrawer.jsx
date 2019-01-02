@@ -87,8 +87,7 @@ const styles = theme => ({
 
 class LeftDrawer extends React.Component {
     state = {
-        open: false,
-        firstTime: true,
+        open: this.props.token !== '',
         logout: false
     };
 
@@ -110,22 +109,23 @@ class LeftDrawer extends React.Component {
     handleOnClickListItem = (listText) => {
         switch (listText) {
             case 'List':
-                console.log('List out Clicked');
+                console.log('List Clicked');
                 break;
             case 'Add':
-                console.log('Add out Clicked');
+                console.log('Add Clicked');
                 break;
             case 'Edit':
-                console.log('Edit out Clicked');
+                console.log('Edit Clicked');
                 break;
             case 'Delete':
-                console.log('Delete out Clicked');
+                console.log('Delete Clicked');
                 break;
             case 'Help':
-                console.log('Help out Clicked');
+                console.log('Help Clicked');
                 break;
             case 'Logout':
                 this.props.deleteToken();
+                this.setState({open: false});
                 break;
             default:
                 console.log('Switch default');
@@ -134,19 +134,18 @@ class LeftDrawer extends React.Component {
 
     handleDrawerOpen = () => {
         let token = this.props.token;
-        if (typeof (token) !== "undefined" && token !== null) {
-            this.setState({showPopup: true, firstTime: false});
-
+        if (token !== '') {
+            this.setState({open: true});
         }
     };
 
     handleDrawerClose = () => {
-        this.setState({showPopup: false, firstTime: false});
+        this.setState({open: false});
     };
 
     render() {
         const {classes, theme} = this.props;
-        const open = this.state.firstTime === true ? true : this.state.open;
+        const open = this.state.open;
 
         return (
             <div className={classes.root}>
@@ -214,6 +213,7 @@ class LeftDrawer extends React.Component {
                     <FillBody
                         token={this.props.token}
                         setToken={this.props.setToken}
+                        handleDrawerOpen={this.handleDrawerOpen}
                     />
                 </main>
             </div>
@@ -235,9 +235,10 @@ function FillBody(props) {
     if (token === '') {
         return (<Login
             setToken={props.setToken}
+            handleDrawerOpen={props.handleDrawerOpen}
         />);
     } else {
-        return <div><h1> successfully Logged in</h1></div>;
+        return null;
     }
 }
 

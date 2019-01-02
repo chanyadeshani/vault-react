@@ -6,7 +6,7 @@ import LeftDrawer from "./components/leftDrawer";
 class App extends Component {
 
     state = {
-        token: localStorage.getItem("token")
+        token: localStorage.getItem("token") !== null ? localStorage.getItem("token") : ''
     };
 
     constructor() {

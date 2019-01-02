@@ -93,20 +93,16 @@ const styles2 = theme => ({
 });
 
 class PopupMessages extends React.Component {
-    state = {
-        open: false,
-    };
 
-    componentWillReceiveProps(nextProps) {
-        console.log("PopupMessages", nextProps.showPopup);
-        this.setState({showPopup: nextProps.showPopup});
-    }
+    state = {
+        open: true
+    };
 
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        this.props.setShowPopupStatusToFalse();
+        this.setState({open: false});
     };
 
     render() {
@@ -138,8 +134,6 @@ PopupMessages.propTypes = {
     classes: PropTypes.object.isRequired,
     variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
     message: PropTypes.string.isRequired,
-    open: PropTypes.bool.isRequired,
-    setShowPopupStatusToFalse: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles2)(PopupMessages);
