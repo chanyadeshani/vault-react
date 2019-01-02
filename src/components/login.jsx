@@ -13,7 +13,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import TextField from '@material-ui/core/TextField';
 import classNames from 'classnames';
-import PopupMessages from './popupMessages'
 
 const domainName = "https://fandoco-vault.herokuapp.com";
 
@@ -55,9 +54,6 @@ class Login extends React.Component {
         username: '',
         password: '',
         showPassword: false,
-        loginStatus: '',
-        showPopup: false,
-        tries: 0
     };
 
     constructor() {
@@ -73,22 +69,6 @@ class Login extends React.Component {
         this.setState(state => ({showPassword: !state.showPassword}));
     };
 
-    getMessage() {
-        if (this.state.loginStatus === 'success') {
-            return 'Login Successful!';
-        } else {
-            return 'Username or Password invalid!';
-        }
-    }
-
-    getVariant() {
-        if (this.state.loginStatus === 'success') {
-            return "success";
-        } else {
-            return 'error';
-        }
-    }
-
     checkLogin(username, password) {
         let url = domainName + "/login";
         let body = "{\"userName\" : \"" + username + "\",\"password\" : \"" + password + "\"}";
@@ -101,23 +81,14 @@ class Login extends React.Component {
             if (postReq.readyState === 4 && postReq.status === 200) {
                 let token = postReq.getResponseHeader("Authorization");
 
-                this.setState((prevState) => ({loginStatus: 'success', showPopup: true, tries: prevState.tries + 1}));
                 this.props.setToken(token);
                 this.props.handleDrawerOpen();
+                this.props.showLoginMessage();
             }
             if (postReq.readyState === 4 && postReq.status !== 200) {
-                this.setState((prevState) => ({loginStatus: 'failure', showPopup: true, tries: prevState.tries + 1}));
+                this.props.showLoginMessage();
             }
         };
-    }
-
-    showPopup() {
-        if (this.state.showPopup) {
-            return (<PopupMessages variant={this.getVariant()}
-                                   message={this.getMessage()}
-                                   key={this.state.tries}
-            />);
-        }
     }
 
     render() {
@@ -174,7 +145,6 @@ class Login extends React.Component {
                             onClick={() => this.checkLogin(this.state.username, this.state.password)}
                         >
                             Login </Button>
-                        {this.showPopup()}
                     </form>
                 </Paper>
             </main>
@@ -187,6 +157,7 @@ Login.propTypes = {
     classes: PropTypes.object.isRequired,
     setToken: PropTypes.func.isRequired,
     handleDrawerOpen: PropTypes.func.isRequired,
+    showLoginMessage: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Login);

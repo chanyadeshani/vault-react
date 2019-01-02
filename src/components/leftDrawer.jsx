@@ -24,6 +24,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Login from './login';
+import PopupMessages from './popupMessages'
 
 const drawerWidth = 240;
 
@@ -88,7 +89,9 @@ const styles = theme => ({
 class LeftDrawer extends React.Component {
     state = {
         open: this.props.token !== '',
-        logout: false
+        logout: false,
+        showPopup: false,
+        tries: 0
     };
 
     static getListIcon(index) {
@@ -125,7 +128,7 @@ class LeftDrawer extends React.Component {
                 break;
             case 'Logout':
                 this.props.deleteToken();
-                this.setState({open: false});
+                this.setState({open: false, showPopup: false});
                 break;
             default:
                 console.log('Switch default');
@@ -135,13 +138,47 @@ class LeftDrawer extends React.Component {
     handleDrawerOpen = () => {
         let token = this.props.token;
         if (token !== '') {
-            this.setState({open: true});
+            this.setState({open: true, showPopup: false});
         }
     };
 
     handleDrawerClose = () => {
-        this.setState({open: false});
+        this.setState({open: false, showPopup: false});
     };
+
+    showLoginMessage = () => {
+        this.setState((prevState) => ({showPopup: true, tries: prevState.tries + 1}));
+    };
+
+    openDrawer = () => {
+        this.handleDrawerOpen();
+        this.setState({showPopup: true});
+    };
+
+    showPopup() {
+        if (this.state.showPopup) {
+            return (<PopupMessages variant={this.getVariant()}
+                                   message={this.getMessage()}
+                                   key={this.state.tries}
+            />);
+        }
+    }
+
+    getMessage() {
+        if (this.props.token !== '') {
+            return 'Login Successful!';
+        } else {
+            return 'Username or Password invalid!';
+        }
+    }
+
+    getVariant() {
+        if (this.props.token !== '') {
+            return "success";
+        } else {
+            return 'error';
+        }
+    }
 
     render() {
         const {classes, theme} = this.props;
@@ -213,8 +250,10 @@ class LeftDrawer extends React.Component {
                     <FillBody
                         token={this.props.token}
                         setToken={this.props.setToken}
-                        handleDrawerOpen={this.handleDrawerOpen}
+                        handleDrawerOpen={this.openDrawer}
+                        showLoginMessage={this.showLoginMessage}
                     />
+                    {this.showPopup()}
                 </main>
             </div>
         );
@@ -236,6 +275,7 @@ function FillBody(props) {
         return (<Login
             setToken={props.setToken}
             handleDrawerOpen={props.handleDrawerOpen}
+            showLoginMessage={props.showLoginMessage}
         />);
     } else {
         return null;
