@@ -15,6 +15,8 @@ import TextField from '@material-ui/core/TextField';
 import classNames from 'classnames';
 import PopupMessages from './popupMessages'
 
+const domainName = "https://fandoco-vault.herokuapp.com";
+
 const styles = theme => ({
     main: {
         width: 'auto',
@@ -53,7 +55,15 @@ class Login extends React.Component {
         username: '',
         password: '',
         showPassword: false,
+        loginStatus: '',
+        showPopup: false
     };
+
+    constructor() {
+        super();
+        this.checkLogin = this.checkLogin.bind(this);
+        this.setOpen = this.setOpen.bind(this);
+    }
 
     handleChange = prop => event => {
         this.setState({[prop]: event.target.value});
@@ -64,7 +74,7 @@ class Login extends React.Component {
     };
 
     getMessage() {
-        if (this.props.loginStatus === 'success') {
+        if (this.state.loginStatus === 'success') {
             return 'Login Successful!';
         } else {
             return 'Username or Password invalid!';
@@ -72,16 +82,41 @@ class Login extends React.Component {
     }
 
     getVariant() {
-        if (this.props.loginStatus === 'success') {
+        if (this.state.loginStatus === 'success') {
             return "success";
         } else {
             return 'error';
         }
     }
 
+    checkLogin(username, password) {
+        let url = domainName + "/login";
+        let body = "{\"userName\" : \"" + username + "\",\"password\" : \"" + password + "\"}";
+
+        let postReq = new XMLHttpRequest();
+        postReq.open('POST', url, true);
+        postReq.setRequestHeader('Content-type', 'application/json');
+        postReq.send(body);
+        postReq.onreadystatechange = () => {//Call a function when the state changes.
+            if (postReq.readyState === 4 && postReq.status === 200) {
+                let token = postReq.getResponseHeader("Authorization");
+
+                this.setState({loginStatus: 'success', showPopup: true});
+                this.props.setToken(token);
+            }
+            if (postReq.readyState === 4 && postReq.status !== 200) {
+
+                this.setState({loginStatus: 'failure', showPopup: true});
+            }
+        }
+    }
+
+    setShowPopupStatusToFalse() {
+        this.setState({showPopup: false});
+    }
+
     render() {
         const {classes} = this.props;
-        console.log("props", this.props);
 
         return (
             <main className={classes.main}>
@@ -131,12 +166,13 @@ class Login extends React.Component {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={() => this.props.onClickLogin(this.state.username, this.state.password)}
+                            onClick={() => this.checkLogin(this.state.username, this.state.password)}
                         >
                             Login </Button>
                         <PopupMessages variant={this.getVariant()}
                                        message={this.getMessage()}
-                                       tries={this.props.tries}
+                                       open={this.state.showPopup}
+                                       setShowPopupStatusToFalse={this.setShowPopupStatusToFalse}
                         />
 
                     </form>
@@ -148,9 +184,7 @@ class Login extends React.Component {
 
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
-    onClickLogin: PropTypes.func.isRequired,
-    loginStatus: PropTypes.string.isRequired,
-    tries: PropTypes.number.isRequired
+    setToken: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Login);

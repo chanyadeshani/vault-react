@@ -98,17 +98,15 @@ class PopupMessages extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.tries !== this.props.tries) {
-            this.setState({open: true});
-        }
+        console.log("PopupMessages", nextProps.showPopup);
+        this.setState({showPopup: nextProps.showPopup});
     }
 
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
-        this.setState({open: false});
+        this.props.setShowPopupStatusToFalse();
     };
 
     render() {
@@ -140,7 +138,8 @@ PopupMessages.propTypes = {
     classes: PropTypes.object.isRequired,
     variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
     message: PropTypes.string.isRequired,
-    tries: PropTypes.number.isRequired
+    open: PropTypes.bool.isRequired,
+    setShowPopupStatusToFalse: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles2)(PopupMessages);

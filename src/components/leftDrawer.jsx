@@ -88,7 +88,8 @@ const styles = theme => ({
 class LeftDrawer extends React.Component {
     state = {
         open: false,
-        firstTime: true
+        firstTime: true,
+        logout: false
     };
 
     static getListIcon(index) {
@@ -106,16 +107,43 @@ class LeftDrawer extends React.Component {
         }
     }
 
+    handleOnClickListItem = (listText) => {
+        switch (listText) {
+            case 'List':
+                console.log('List out Clicked');
+                break;
+            case 'Add':
+                console.log('Add out Clicked');
+                break;
+            case 'Edit':
+                console.log('Edit out Clicked');
+                break;
+            case 'Delete':
+                console.log('Delete out Clicked');
+                break;
+            case 'Help':
+                console.log('Help out Clicked');
+                break;
+            case 'Logout':
+                console.log('Logged out Clicked');
+                localStorage.removeItem('token');
+                this.setState({logout: true});
+                break;
+            default:
+                console.log('Switch default');
+        }
+    };
+
     handleDrawerOpen = () => {
-        let token = localStorage.getItem('token');
+        let token = this.props.token;
         if (typeof (token) !== "undefined" && token !== null) {
-            this.setState({open: true, firstTime: false});
+            this.setState({showPopup: true, firstTime: false});
 
         }
     };
 
     handleDrawerClose = () => {
-        this.setState({open: false, firstTime: false});
+        this.setState({showPopup: false, firstTime: false});
     };
 
     render() {
@@ -162,7 +190,7 @@ class LeftDrawer extends React.Component {
                     <Divider/>
                     <List>
                         {['List', 'Add', 'Edit', 'Delete'].map((text, index) => (
-                            <ListItem button key={text}>
+                            <ListItem button onClick={() => this.handleOnClickListItem(text)} key={text}>
                                 <ListItemIcon>{LeftDrawer.getListIcon(text)}</ListItemIcon>
                                 <ListItemText primary={text}/>
                             </ListItem>
@@ -171,7 +199,7 @@ class LeftDrawer extends React.Component {
                     <Divider/>
                     <List>
                         {['Help', 'Logout'].map((text, index) => (
-                            <ListItem button key={text}>
+                            <ListItem button key={text} onClick={() => this.handleOnClickListItem(text)}>
                                 <ListItemIcon>{index % 2 === 0 ? <HelpIcon/> : <ExitIcon/>}</ListItemIcon>
                                 <ListItemText primary={text}/>
                             </ListItem>
@@ -185,9 +213,9 @@ class LeftDrawer extends React.Component {
                 >
                     <div className={classes.drawerHeader}/>
 
-                    <FillBody onClickLogin={this.props.checkLogin}
-                              loginStatus={this.props.loginStatus}
-                              tries={this.props.tries}
+                    <FillBody
+                        token={this.props.token}
+                        setToken={this.props.setToken}
                     />
                 </main>
             </div>
@@ -198,23 +226,19 @@ class LeftDrawer extends React.Component {
 LeftDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    checkLogin: PropTypes.func.isRequired,
-    loginStatus: PropTypes.string.isRequired,
-    tries: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
+    setToken: PropTypes.func.isRequired
 };
 
 
 function FillBody(props) {
-    let token = localStorage.getItem('token');
-    console.log(localStorage.getItem('token'));
-    if (typeof (token) === "undefined" || token === null) {
+    let token = props.token;
+    if (token === '') {
         return (<Login
-            onClickLogin={props.onClickLogin}
-            loginStatus={props.loginStatus}
-            tries={props.tries}
+            setToken={props.setToken}
         />);
     } else {
-        return null;
+        return <div><h1> successfully Logged in</h1></div>;
     }
 }
 
