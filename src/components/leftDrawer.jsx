@@ -89,8 +89,7 @@ const styles = theme => ({
 class LeftDrawer extends React.Component {
     state = {
         open: this.props.token !== '',
-        logout: false,
-        showPopup: false,
+        loginMessage: '',
         tries: 0
     };
 
@@ -128,7 +127,7 @@ class LeftDrawer extends React.Component {
                 break;
             case 'Logout':
                 this.props.deleteToken();
-                this.setState({open: false, showPopup: false});
+                this.setState({open: false, loginMessage: ''});
                 break;
             default:
                 console.log('Switch default');
@@ -138,34 +137,34 @@ class LeftDrawer extends React.Component {
     handleDrawerOpen = () => {
         let token = this.props.token;
         if (token !== '') {
-            this.setState({open: true, showPopup: false});
+            this.setState({open: true});
         }
     };
 
     handleDrawerClose = () => {
-        this.setState({open: false, showPopup: false});
+        this.setState({open: false});
     };
 
-    showLoginMessage = () => {
-        this.setState((prevState) => ({showPopup: true, tries: prevState.tries + 1}));
-    };
-
-    openDrawer = () => {
-        this.handleDrawerOpen();
-        this.setState({showPopup: true});
+    showLoginMessage = (loginStatus) => {
+        this.setState((prevState) => ({tries: prevState.tries + 1, loginMessage: loginStatus}));
     };
 
     showPopup() {
-        if (this.state.showPopup) {
+        if (this.state.loginMessage !== '') {
             return (<PopupMessages variant={this.getVariant()}
                                    message={this.getMessage()}
                                    key={this.state.tries}
+                                   clearMessage={this.clearLoginMessage}
             />);
         }
-    }
+    };
+
+    clearLoginMessage = () => {
+        this.setState({loginMessage: ''});
+    };
 
     getMessage() {
-        if (this.props.token !== '') {
+        if (this.state.loginMessage === 'success') {
             return 'Login Successful!';
         } else {
             return 'Username or Password invalid!';
@@ -173,7 +172,7 @@ class LeftDrawer extends React.Component {
     }
 
     getVariant() {
-        if (this.props.token !== '') {
+        if (this.state.loginMessage === 'success') {
             return "success";
         } else {
             return 'error';
@@ -250,7 +249,7 @@ class LeftDrawer extends React.Component {
                     <FillBody
                         token={this.props.token}
                         setToken={this.props.setToken}
-                        handleDrawerOpen={this.openDrawer}
+                        handleDrawerOpen={this.handleDrawerOpen}
                         showLoginMessage={this.showLoginMessage}
                     />
                     {this.showPopup()}

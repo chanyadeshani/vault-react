@@ -83,10 +83,10 @@ class Login extends React.Component {
 
                 this.props.setToken(token);
                 this.props.handleDrawerOpen();
-                this.props.showLoginMessage();
+                this.props.showLoginMessage("success");
             }
             if (postReq.readyState === 4 && postReq.status !== 200) {
-                this.props.showLoginMessage();
+                this.props.showLoginMessage("failure");
             }
         };
     }

@@ -103,6 +103,7 @@ class PopupMessages extends React.Component {
             return;
         }
         this.setState({open: false});
+        this.props.clearMessage();
     };
 
     render() {
@@ -134,6 +135,7 @@ PopupMessages.propTypes = {
     classes: PropTypes.object.isRequired,
     variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
     message: PropTypes.string.isRequired,
+    clearMessage: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles2)(PopupMessages);
