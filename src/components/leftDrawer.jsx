@@ -25,6 +25,7 @@ import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Login from './login';
 import PopupMessages from './popupMessages'
+import DataList from './dataList'
 
 const drawerWidth = 240;
 
@@ -90,7 +91,8 @@ class LeftDrawer extends React.Component {
     state = {
         open: this.props.token !== '',
         loginMessage: '',
-        tries: 0
+        tries: 0,
+        listShowing: 'List'
     };
 
     static getListIcon(index) {
@@ -112,7 +114,34 @@ class LeftDrawer extends React.Component {
         switch (listText) {
             case 'List':
                 console.log('List Clicked');
+                this.setState({listShowing: 'List'});
                 break;
+            case 'Add':
+                console.log('Add Clicked');
+                break;
+            case 'Edit':
+                console.log('Edit Clicked');
+                break;
+            case 'Delete':
+                console.log('Delete Clicked');
+                break;
+            case 'Help':
+                console.log('Help Clicked');
+                break;
+            case 'Logout':
+                this.props.deleteToken();
+                this.setState({open: false, loginMessage: ''});
+                break;
+            default:
+                console.log('Switch default');
+        }
+    };
+    showListItem = () => {
+        let listText = this.state.listShowing;
+        switch (listText) {
+            case 'List':
+                console.log('Show List');
+                return <DataList/>;
             case 'Add':
                 console.log('Add Clicked');
                 break;
@@ -251,6 +280,8 @@ class LeftDrawer extends React.Component {
                         setToken={this.props.setToken}
                         handleDrawerOpen={this.handleDrawerOpen}
                         showLoginMessage={this.showLoginMessage}
+                        handleOnClickListItem={this.handleOnClickListItem}
+                        showListItem={this.showListItem}
                     />
                     {this.showPopup()}
                 </main>
@@ -277,7 +308,8 @@ function FillBody(props) {
             showLoginMessage={props.showLoginMessage}
         />);
     } else {
-        return null;
+        console.log('ShowListItem called');
+        return props.showListItem();
     }
 }
 
