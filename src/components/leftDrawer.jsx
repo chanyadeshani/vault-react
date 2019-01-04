@@ -24,8 +24,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Login from './login';
-import PopupMessages from './popupMessages'
-import DataList from './dataList'
+import PopupMessages from './popupMessages';
+import DataList from './dataList';
+import {connect} from "react-redux";
+import {removeToken} from "../actions";
 
 const drawerWidth = 240;
 
@@ -251,7 +253,7 @@ class LeftDrawer extends React.Component {
                     </div>
                     <Divider/>
                     <List>
-                        {['List', 'Add', 'Edit', 'Delete'].map((text, index) => (
+                        {['List', 'Add', 'Edit', 'Delete'].map((text) => (
                             <ListItem button onClick={() => this.handleOnClickListItem(text)} key={text}>
                                 <ListItemIcon>{LeftDrawer.getListIcon(text)}</ListItemIcon>
                                 <ListItemText primary={text}/>
@@ -277,7 +279,6 @@ class LeftDrawer extends React.Component {
 
                     <FillBody
                         token={this.props.token}
-                        setToken={this.props.setToken}
                         handleDrawerOpen={this.handleDrawerOpen}
                         showLoginMessage={this.showLoginMessage}
                         handleOnClickListItem={this.handleOnClickListItem}
@@ -294,16 +295,27 @@ LeftDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
-    setToken: PropTypes.func.isRequired,
     deleteToken: PropTypes.func.isRequired
 };
 
+export default connect(
+    state =>
+        ({
+            token: state.token
+        })
+    ,
+    dispatch =>
+        ({
+            deleteToken() {
+                dispatch(removeToken());
+            }
+        })
+)(withStyles(styles, {withTheme: true})(LeftDrawer));
 
 function FillBody(props) {
     let token = props.token;
     if (token === '') {
         return (<Login
-            setToken={props.setToken}
             handleDrawerOpen={props.handleDrawerOpen}
             showLoginMessage={props.showLoginMessage}
         />);
@@ -313,4 +325,8 @@ function FillBody(props) {
     }
 }
 
-export default withStyles(styles, {withTheme: true})(LeftDrawer);
+FillBody.propTypes = {
+    token: PropTypes.string.isRequired,
+    handleDrawerOpen: PropTypes.func.isRequired,
+    showLoginMessage: PropTypes.func.isRequired
+};

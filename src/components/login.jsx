@@ -13,6 +13,8 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import TextField from '@material-ui/core/TextField';
 import classNames from 'classnames';
+import {connect} from "react-redux";
+import {addToken} from "../actions";
 
 const domainName = "https://fandoco-vault.herokuapp.com";
 
@@ -160,4 +162,12 @@ Login.propTypes = {
     showLoginMessage: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Login);
+export default connect(
+    null,
+    dispatch =>
+        ({
+            setToken(token) {
+                dispatch(addToken(token));
+            }
+        })
+)(withStyles(styles)(Login));

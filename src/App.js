@@ -1,41 +1,31 @@
 import React, {Component} from 'react';
 import './App.css';
 import LeftDrawer from "./components/leftDrawer";
-
+import {connect} from 'react-redux';
+import {addToken, removeToken} from "./actions";
 
 class App extends Component {
-
-    state = {
-        token: localStorage.getItem("token") !== null ? localStorage.getItem("token") : ''
-    };
-
-    constructor() {
-        super();
-        this.setToken = this.setToken.bind(this);
-        this.deleteToken = this.deleteToken.bind(this);
-    }
-
     render() {
         return (
             <div>
-                <LeftDrawer
-                    token={this.state.token}
-                    setToken={this.setToken}
-                    deleteToken={this.deleteToken}
-                />
+                <LeftDrawer/>
             </div>
         );
     }
-
-    setToken(token) {
-        this.setState({token});
-        localStorage.setItem('token', token);
-    }
-
-    deleteToken() {
-        this.setState({token: ''});
-        localStorage.removeItem('token');
-    }
 }
 
-export default App;
+export default connect(
+    state =>
+        ({
+            token: state.token
+        }),
+    dispatch =>
+        ({
+            setToken(token) {
+                dispatch(addToken(token));
+            },
+            deleteToken(token) {
+                dispatch(removeToken(token));
+            }
+        })
+)(App);
