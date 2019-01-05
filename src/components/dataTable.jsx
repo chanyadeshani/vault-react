@@ -9,8 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 const rows = [
-    {id: 'name', numeric: false, disablePadding: false, label: 'Type'},
-    {id: 'calories', numeric: true, disablePadding: false, label: 'Data'},
+    {id: 'type', numeric: false, disablePadding: false, label: 'Type'},
+    {id: 'data', numeric: true, disablePadding: false, label: 'Data'},
 ];
 
 class DataTable extends React.Component {
@@ -24,10 +24,8 @@ class DataTable extends React.Component {
                             <TableCell
                                 key={row.id}
                                 align={row.numeric ? 'right' : 'left'}
-                                padding={'default'}
-                            >
+                                padding={'default'}>
                                 {row.label}
-
                             </TableCell>
                         );
                     }, this)}
@@ -36,11 +34,6 @@ class DataTable extends React.Component {
         );
     }
 }
-
-DataTable.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    rowCount: PropTypes.number.isRequired,
-};
 
 const styles = theme => ({
     root: {
@@ -57,97 +50,34 @@ const styles = theme => ({
 
 class EnhancedTable extends React.Component {
     state = {
-        order: 'asc',
-        orderBy: 'calories',
-        selected: [],
         data: [],
         page: 0,
-        rowsPerPage: 5,
+        rowsPerPage: 5
     };
 
     componentDidMount() {
         this.setState({data: this.props.data});
     }
 
-    handleRequestSort = (event, property) => {
-        const orderBy = property;
-        let order = 'desc';
-
-        if (this.state.orderBy === property && this.state.order === 'desc') {
-            order = 'asc';
-        }
-
-        this.setState({order, orderBy});
-    };
-
-    handleSelectAllClick = event => {
-        if (event.target.checked) {
-            this.setState(state => ({selected: state.data.map(n => n.id)}));
-            return;
-        }
-        this.setState({selected: []});
-    };
-
-    handleClick = (event, id) => {
-        const {selected} = this.state;
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        this.setState({selected: newSelected});
-    };
-
-    handleChangePage = (event, page) => {
-        this.setState({page});
-    };
-
-    handleChangeRowsPerPage = event => {
-        this.setState({rowsPerPage: event.target.value});
-
-    };
-
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
-
     render() {
         const {classes, data} = this.props;
-        const {order, orderBy, selected, rowsPerPage, page} = this.state;
+        const {rowsPerPage, page} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
-                        <DataTable
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            rowCount={data.length}
-                        />
+                        <DataTable/>
                         <TableBody>
                             {
                                 data.map(n => {
-                                    const isSelected = this.isSelected(n.id);
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n.id)}
                                             role="checkbox"
-                                            aria-checked={isSelected}
                                             tabIndex={-1}
                                             key={n.id}
-                                            selected={isSelected}
                                         >
                                             <TableCell component="th" scope="row">
                                                 {n.key}
