@@ -1,3 +1,6 @@
 {
-  "token": ""
+  "token": "",
+  "types": [
+    "Select a type"
+  ]
 }

@@ -14,3 +14,14 @@ export const token = (state = {}, action) => {
             return state;
     }
 };
+
+export const types = (state = {}, action) => {
+    switch (action.type) {
+        case C.ADD_TYPES:
+            return {
+                types: action.types
+            };
+        default :
+            return state;
+    }
+};
