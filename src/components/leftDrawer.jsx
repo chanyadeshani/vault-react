@@ -115,7 +115,6 @@ class LeftDrawer extends React.Component {
     handleOnClickListItem = (listText) => {
         switch (listText) {
             case 'List':
-                console.log('List Clicked');
                 this.setState({listShowing: 'List'});
                 break;
             case 'Add':
@@ -142,7 +141,6 @@ class LeftDrawer extends React.Component {
         let listText = this.state.listShowing;
         switch (listText) {
             case 'List':
-                console.log('Show List');
                 return <DataList/>;
             case 'Add':
                 console.log('Add Clicked');

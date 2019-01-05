@@ -92,7 +92,6 @@ class DataList extends React.Component {
                     key: item.key,
                     value: item.value
                 }));
-                console.log("data", dataArray);
                 this.setState({data: dataArray});
             }
         };
