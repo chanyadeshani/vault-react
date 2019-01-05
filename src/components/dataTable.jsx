@@ -9,8 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 const rows = [
-    {id: 'type', numeric: false, disablePadding: false, label: 'Type'},
-    {id: 'data', numeric: true, disablePadding: false, label: 'Data'},
+    {id: 'key', numeric: false, disablePadding: false, label: 'Key'},
+    {id: 'value', numeric: false, disablePadding: false, label: 'Value'},
 ];
 
 class DataTable extends React.Component {
@@ -82,7 +82,7 @@ class EnhancedTable extends React.Component {
                                             <TableCell component="th" scope="row">
                                                 {n.key}
                                             </TableCell>
-                                            <TableCell align="right">{n.value}</TableCell>
+                                            <TableCell>{n.value}</TableCell>
                                         </TableRow>
                                     );
                                 })}
