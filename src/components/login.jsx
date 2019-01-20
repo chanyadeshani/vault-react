@@ -84,6 +84,7 @@ class Login extends React.Component {
                 let token = postReq.getResponseHeader("Authorization");
 
                 this.props.setToken(token);
+                localStorage.setItem('token', token);
                 this.props.handleDrawerOpen();
                 this.props.showLoginMessage("success");
             }

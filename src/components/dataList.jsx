@@ -70,9 +70,7 @@ class DataList extends React.Component {
     };
 
     getDatabyType = (type) => {
-        if (localStorage.getItem('token') == null) {
-            return;
-        }
+        
         let url1 = domainName + "/data?type=" + type;
         //Fetch the content of the url using the XMLHttpRequest object
         let req1 = new XMLHttpRequest();
@@ -93,6 +91,7 @@ class DataList extends React.Component {
                     value: item.value
                 }));
                 this.setState({data: dataArray});
+                console.log('data array', dataArray);
             }
         };
     };
@@ -145,6 +144,14 @@ class DataList extends React.Component {
 
 DataList.propTypes = {
     classes: PropTypes.object.isRequired,
+    // token: PropTypes.string
 };
 
 export default withStyles(styles)(DataList);
+
+// export default connect(
+//     state =>
+//         ({
+//             // token: state.token
+//         })
+// )(withStyles(styles))(DataList);
