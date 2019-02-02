@@ -26,6 +26,8 @@ import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Login from './login';
 import PopupMessages from './popupMessages';
 import DataList from './dataList';
+import Add from './add';
+import Delete from './delete';
 import {connect} from "react-redux";
 import {removeToken} from "../actions";
 
@@ -118,13 +120,13 @@ class LeftDrawer extends React.Component {
                 this.setState({listShowing: 'List'});
                 break;
             case 'Add':
-                console.log('Add Clicked');
+                this.setState({listShowing: 'Add'});
                 break;
             case 'Edit':
                 console.log('Edit Clicked');
                 break;
             case 'Delete':
-                console.log('Delete Clicked');
+                this.setState({listShowing: 'Delete'});
                 break;
             case 'Help':
                 console.log('Help Clicked');
@@ -143,14 +145,12 @@ class LeftDrawer extends React.Component {
             case 'List':
                 return <DataList/>;
             case 'Add':
-                console.log('Add Clicked');
-                break;
+                return <Add/>;
             case 'Edit':
                 console.log('Edit Clicked');
                 break;
             case 'Delete':
-                console.log('Delete Clicked');
-                break;
+                return <Delete/>;
             case 'Help':
                 console.log('Help Clicked');
                 break;
@@ -318,7 +318,6 @@ function FillBody(props) {
             showLoginMessage={props.showLoginMessage}
         />);
     } else {
-        console.log('ShowListItem called');
         return props.showListItem();
     }
 }

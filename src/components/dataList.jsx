@@ -16,7 +16,7 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 120,
+        minWidth: 80,
     },
 });
 
@@ -70,7 +70,7 @@ class DataList extends React.Component {
     };
 
     getDatabyType = (type) => {
-        
+
         let url1 = domainName + "/data?type=" + type;
         //Fetch the content of the url using the XMLHttpRequest object
         let req1 = new XMLHttpRequest();
@@ -91,7 +91,6 @@ class DataList extends React.Component {
                     value: item.value
                 }));
                 this.setState({data: dataArray});
-                console.log('data array', dataArray);
             }
         };
     };
@@ -114,7 +113,7 @@ class DataList extends React.Component {
             <div>
                 <form autoComplete="off">
                     <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="demo-controlled-open-select">Type</InputLabel>
+                        <InputLabel htmlFor="open-select-1">Type</InputLabel>
                         <Select
                             open={this.state.open}
                             onClose={this.handleClose}
@@ -123,7 +122,7 @@ class DataList extends React.Component {
                             onChange={this.handleChange}
                             inputProps={{
                                 name: 'type',
-                                id: 'demo-controlled-open-select',
+                                id: 'open-select-1',
                             }}
                         >
                             {
